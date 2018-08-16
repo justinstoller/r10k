@@ -64,6 +64,7 @@ module R10K
           end
         ensure
           if (postcmd = @settings[:postrun])
+            postcmd.map! { |e| e.gsub('$environment', deployment.environments) }
             subproc = R10K::Util::Subprocess.new(postcmd)
             subproc.logger = logger
             subproc.execute
