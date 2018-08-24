@@ -67,7 +67,7 @@ module R10K
             if postcmd.grep('$environment').any?
                 deployment.environments.each do |env|
                     next if !(@argv.empty? || @argv.any? { |name| env.dirname == name })
-                    cmd = postcmd.map { |e| e.gsub('$environment', env) }
+                    cmd = postcmd.map { |e| e.gsub('$environment', env.name) }
                     exec_postcmd(cmd)
                 end
             else
