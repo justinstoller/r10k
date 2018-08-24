@@ -77,7 +77,7 @@ module R10K
         end
 
         def exec_postcmd(cmd)
-            subproc = R10K::Util::Subprocess.new(postcmd)
+            subproc = R10K::Util::Subprocess.new(cmd)
             subproc.logger = logger
             subproc.execute
         end
