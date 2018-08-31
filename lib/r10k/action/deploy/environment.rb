@@ -65,21 +65,14 @@ module R10K
         ensure
           if (postcmd = @settings[:postrun])
             if postcmd.grep('$environment').any?
-                deployment.environments.each do |env|
-                    next if !(@argv.empty? || @argv.any? { |name| env.dirname == name })
-                    cmd = postcmd.map { |e| e.gsub('$environment', env.name) }
-                    exec_postcmd(cmd)
-                end
-            else
-                exec_postcmd(postcmd)
+              envs = deployment.environments.map { |e| e.name }
+              envs.reject! { |e| !@argv.include?(e) } if @argv.any?
+              postcmd = postcmd.map { |e| e.gsub('$environment', envs.join(' ')) }
             end
-          end
-        end
-
-        def exec_postcmd(cmd)
-            subproc = R10K::Util::Subprocess.new(cmd)
+            subproc = R10K::Util::Subprocess.new(postcmd)
             subproc.logger = logger
             subproc.execute
+          end
         end
 
         def visit_source(source)
