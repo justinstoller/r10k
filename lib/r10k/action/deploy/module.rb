@@ -38,6 +38,7 @@ module R10K
                 generate_types: @generate_types
               },
               modules: {
+                pool_size: @settings[:pool_size] || 4,
                 requested_modules: @argv.map.to_a,
                 # force here is used to make it easier to reason about
                 force: !@no_force

@@ -47,6 +47,7 @@ module R10K
                 deploy_spec: settings.dig(:deploy, :deploy_spec),
                 requested_modules: [],
                 deploy_modules: @modules,
+                pool_size: @settings[:pool_size] || 4,
                 force: !@no_force, # force here is used to make it easier to reason about
               },
               purging: {

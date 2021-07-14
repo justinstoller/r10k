@@ -15,7 +15,7 @@ describe R10K::Action::Puppetfile::Install do
   end
 
   before(:each) do
-    allow(loader).to receive(:load).and_return({})
+    allow(loader).to receive(:load!).and_return({})
     allow(R10K::ModuleLoader::Puppetfile).to receive(:new).
       with({basedir: "/some/nonexistent/path",
             overrides: {force: false}}).
@@ -34,7 +34,7 @@ describe R10K::Action::Puppetfile::Install do
     end
 
     before do
-      allow(loader).to receive(:load).and_return({
+      allow(loader).to receive(:load!).and_return({
         modules: modules,
         managed_directories: [],
         desired_contents: [],
@@ -58,7 +58,7 @@ describe R10K::Action::Puppetfile::Install do
 
   describe "purging" do
     before do
-      allow(loader).to receive(:load).and_return({
+      allow(loader).to receive(:load!).and_return({
         modules:             [],
         desired_contents:    [ 'root/foo' ],
         managed_directories: [ 'root' ],
@@ -102,7 +102,7 @@ describe R10K::Action::Puppetfile::Install do
 
   describe "forcing to overwrite local changes" do
     before do
-      allow(loader).to receive(:load).and_return({
+      allow(loader).to receive(:load!).and_return({
         modules: []
       })
     end

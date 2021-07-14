@@ -1,6 +1,10 @@
+require 'r10k/logging'
+
 module R10K
   module ModuleLoader
     class Puppetfile
+
+      include R10K::Logging
 
       DEFAULT_MODULEDIR = 'modules'
       DEFAULT_PUPPETFILE_NAME = 'Puppetfile'
@@ -44,6 +48,20 @@ module R10K
       end
 
       def load
+        if !File.readable?(@puppetfile)
+          logger.debug _("Puppetfile %{path} missing or unreadable") % {path: @puppetfile.inspect}
+          {
+            modules: [],
+            managed_directories: [],
+            desired_contents: [],
+            purge_exclusions: []
+          }
+        else
+          self.load!
+        end
+      end
+
+      def load!
         dsl = R10K::ModuleLoader::Puppetfile::DSL.new(self)
         dsl.instance_eval(puppetfile_content(@puppetfile), @puppetfile)
 

@@ -203,7 +203,7 @@ describe R10K::ModuleLoader::Puppetfile do
     it 'returns an array of paths that #purge! will operate within' do
       expect(R10K::Module).to receive(:new).with('puppet/test_module', subject.moduledir, hash_including(version: '1.2.3'), anything).and_call_original
       subject.add_module('puppet/test_module', '1.2.3')
-      subject.load
+      subject.load!
 
       expect(subject.modules.length).to be 1
       expect(subject.managed_directories).to match_array([subject.moduledir])
@@ -215,7 +215,7 @@ describe R10K::ModuleLoader::Puppetfile do
 
         expect(R10K::Module).to receive(:new).with('puppet/test_module', basedir, module_opts, anything).and_call_original
         subject.add_module('puppet/test_module', module_opts)
-        subject.load
+        subject.load!
 
         expect(subject.modules.length).to be 1
         expect(subject.managed_directories).to be_empty
@@ -236,7 +236,7 @@ describe R10K::ModuleLoader::Puppetfile do
       @path = File.join(PROJECT_ROOT, 'spec', 'fixtures', 'unit', 'puppetfile', 'invalid-syntax')
       pf_path = File.join(@path, 'Puppetfile')
       expect {
-        subject.load
+        subject.load!
       }.to raise_error do |e|
         expect_wrapped_error(e, pf_path, SyntaxError)
       end
@@ -246,7 +246,7 @@ describe R10K::ModuleLoader::Puppetfile do
       @path = File.join(PROJECT_ROOT, 'spec', 'fixtures', 'unit', 'puppetfile', 'load-error')
       pf_path = File.join(@path, 'Puppetfile')
       expect {
-        subject.load
+        subject.load!
       }.to raise_error do |e|
         expect_wrapped_error(e, pf_path, LoadError)
       end
@@ -256,7 +256,7 @@ describe R10K::ModuleLoader::Puppetfile do
       @path = File.join(PROJECT_ROOT, 'spec', 'fixtures', 'unit', 'puppetfile', 'argument-error')
       pf_path = File.join(@path, 'Puppetfile')
       expect {
-        subject.load
+        subject.load!
       }.to raise_error do |e|
         expect_wrapped_error(e, pf_path, ArgumentError)
       end
@@ -266,7 +266,7 @@ describe R10K::ModuleLoader::Puppetfile do
       @path = File.join(PROJECT_ROOT, 'spec', 'fixtures', 'unit', 'puppetfile', 'duplicate-module-error')
       pf_path = File.join(@path, 'Puppetfile')
       expect {
-        subject.load
+        subject.load!
       }.to raise_error(R10K::Error, /Puppetfiles cannot contain duplicate module names/i)
     end
 
@@ -274,7 +274,7 @@ describe R10K::ModuleLoader::Puppetfile do
       @path = File.join(PROJECT_ROOT, 'spec', 'fixtures', 'unit', 'puppetfile', 'name-error')
       pf_path = File.join(@path, 'Puppetfile')
       expect {
-        subject.load
+        subject.load!
       }.to raise_error do |e|
         expect_wrapped_error(e, pf_path, NameError)
       end
@@ -283,21 +283,21 @@ describe R10K::ModuleLoader::Puppetfile do
     it 'accepts a forge module with a version' do
       @path = File.join(PROJECT_ROOT, 'spec', 'fixtures', 'unit', 'puppetfile', 'valid-forge-with-version')
       pf_path = File.join(@path, 'Puppetfile')
-      expect { subject.load }.not_to raise_error
+      expect { subject.load! }.not_to raise_error
     end
 
     describe 'setting a custom moduledir' do
       it 'allows setting an absolute moduledir' do
         @path = '/fake/basedir'
         allow(subject).to receive(:puppetfile_content).and_return('moduledir "/fake/moduledir"')
-        subject.load
+        subject.load!
         expect(subject.instance_variable_get(:@moduledir)).to eq('/fake/moduledir')
       end
 
       it 'roots relative moduledirs in the basedir' do
         @path = '/fake/basedir'
         allow(subject).to receive(:puppetfile_content).and_return('moduledir "my/moduledir"')
-        subject.load
+        subject.load!
         expect(subject.instance_variable_get(:@moduledir)).to eq(File.join(@path, 'my/moduledir'))
       end
     end
@@ -305,13 +305,13 @@ describe R10K::ModuleLoader::Puppetfile do
     it 'accepts a forge module without a version' do
       @path = File.join(PROJECT_ROOT, 'spec', 'fixtures', 'unit', 'puppetfile', 'valid-forge-without-version')
       pf_path = File.join(@path, 'Puppetfile')
-      expect { subject.load }.not_to raise_error
+      expect { subject.load! }.not_to raise_error
     end
 
     it 'creates a git module and applies the default branch specified in the Puppetfile' do
       @path = File.join(PROJECT_ROOT, 'spec', 'fixtures', 'unit', 'puppetfile', 'default-branch-override')
       pf_path = File.join(@path, 'Puppetfile')
-      expect { subject.load }.not_to raise_error
+      expect { subject.load! }.not_to raise_error
       git_module = subject.modules[0]
       expect(git_module.default_ref).to eq 'here_lies_the_default_branch'
     end
@@ -321,7 +321,7 @@ describe R10K::ModuleLoader::Puppetfile do
       pf_path = File.join(@path, 'Puppetfile')
       default_branch_override = 'default_branch_override_name'
       subject.default_branch_override = default_branch_override
-      expect { subject.load }.not_to raise_error
+      expect { subject.load! }.not_to raise_error
       git_module = subject.modules[0]
       expect(git_module.default_override_ref).to eq default_branch_override
       expect(git_module.default_ref).to eq 'here_lies_the_default_branch'
