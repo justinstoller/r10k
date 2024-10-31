@@ -86,7 +86,7 @@ class R10K::Environment::Base
   # @abstract
   # @return [void]
   def sync
-    raise NotImplementedError, _("%{class} has not implemented method %{method}") % {class: self.class, method: __method__}
+    raise NotImplementedError, "%{class} has not implemented method %{method}" % {class: self.class, method: __method__}
   end
 
   # Determine the current status of the environment.
@@ -102,7 +102,7 @@ class R10K::Environment::Base
   # @abstract
   # @return [Symbol]
   def status
-    raise NotImplementedError, _("%{class} has not implemented method %{method}") % {class: self.class, method: __method__}
+    raise NotImplementedError, "%{class} has not implemented method %{method}" % {class: self.class, method: __method__}
   end
 
   # Returns a unique identifier for the environment's current state.
@@ -111,7 +111,7 @@ class R10K::Environment::Base
   # @abstract
   # @return [String]
   def signature
-    raise NotImplementedError, _("%{class} has not implemented method %{method}") %{class: self.class, method: __method__}
+    raise NotImplementedError, "%{class} has not implemented method %{method}" % {class: self.class, method: __method__}
   end
 
   # Returns a hash describing the current state of the environment.

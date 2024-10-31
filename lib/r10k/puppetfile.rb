@@ -101,7 +101,7 @@ class Puppetfile
       return @loaded_content
     else
       if !File.readable?(puppetfile_path)
-        logger.debug _("Puppetfile %{path} missing or unreadable") % {path: puppetfile_path.inspect}
+        logger.debug "Puppetfile %{path} missing or unreadable" % {path: puppetfile_path.inspect}
       else
         self.load!(default_branch_override)
       end

@@ -57,8 +57,8 @@ class R10K::Environment::WithModules < R10K::Environment::Base
     return false unless conflict
 
     msg_vars = {src: mod_b.origin, name: mod_b.name}
-    msg_error = _('Environment and %{src} both define the "%{name}" module' % msg_vars)
-    msg_continue = _("#{msg_error}. The %{src} definition will be ignored" % msg_vars)
+    msg_error = 'Environment and %{src} both define the "%{name}" module' % msg_vars
+    msg_continue = "#{msg_error}. The %{src} definition will be ignored" % msg_vars
 
     case conflict_opt = @options[:module_conflicts]
     when 'override_and_warn', nil
@@ -68,8 +68,8 @@ class R10K::Environment::WithModules < R10K::Environment::Base
     when 'error'
       raise R10K::Error, msg_error
     else
-      raise R10K::Error, _('Unexpected value for `module_conflicts` setting in %{env} ' \
-                           'environment: %{val}' % {env: self.name, val: conflict_opt})
+      raise R10K::Error, 'Unexpected value for `module_conflicts` setting in %{env} ' \
+                           'environment: %{val}' % {env: self.name, val: conflict_opt}
     end
 
     true

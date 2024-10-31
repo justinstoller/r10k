@@ -34,7 +34,7 @@ module R10K
         end
 
         def method_missing(method, *args)
-          raise NoMethodError, _("unrecognized declaration '%{method}'") % {method: method}
+          raise NoMethodError, "unrecognized declaration '%{method}'" % {method: method}
         end
       end
     end

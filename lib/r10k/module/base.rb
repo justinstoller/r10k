@@ -63,7 +63,7 @@ class R10K::Module::Base
     @exclude_spec = true
     @exclude_spec = @overrides.dig(:modules, :exclude_spec) unless @overrides.dig(:modules, :exclude_spec).nil?
     if args.has_key?(:exclude_spec)
-      logger.debug2 _("Overriding :exclude_spec setting with per module setting for #{@title}")
+      logger.debug2 "Overriding :exclude_spec setting with per module setting for #{@title}"
       @exclude_spec = args.delete(:exclude_spec)
     end
     @origin = 'external' # Expect Puppetfile or R10k::Environment to set this to a specific value
@@ -84,7 +84,7 @@ class R10K::Module::Base
       if @spec_deletable
         delete_spec_dir
       else
-        logger.info _("Spec dir for #{@title} will not be deleted because it is not in the moduledir")
+        logger.info "Spec dir for #{@title} will not be deleted because it is not in the moduledir"
       end
     end
   end
@@ -96,7 +96,7 @@ class R10K::Module::Base
       spec_path = spec_path.realpath
     end
     if spec_path.directory?
-      logger.debug2 _("Deleting spec data at #{spec_path}")
+      logger.debug2 "Deleting spec data at #{spec_path}"
       # Use the secure flag for the #rm_rf method to avoid security issues
       # involving TOCTTOU(time of check to time of use); more details here:
       # https://ruby-doc.org/stdlib-2.7.0/libdoc/fileutils/rdoc/FileUtils.html#method-c-rm_rf
@@ -104,7 +104,7 @@ class R10K::Module::Base
       # also being deleted; this should be revisted if Windows becomes higher priority.
       FileUtils.rm_rf(spec_path, secure: true)
     else
-      logger.debug2 _("No spec dir detected at #{spec_path}, skipping deletion")
+      logger.debug2 "No spec dir detected at #{spec_path}, skipping deletion"
     end
   end
 
@@ -117,10 +117,10 @@ class R10K::Module::Base
 
   def should_sync?
     if @should_sync
-      logger.info _("Deploying module to %{path}") % {path: path}
+      logger.info "Deploying module to %{path}" % {path: path}
       true
     else
-      logger.debug1(_("Only updating modules %{modules}, skipping module %{name}") % {modules: @requested_modules.inspect, name: name})
+      logger.debug1("Only updating modules %{modules}, skipping module %{name}" % {modules: @requested_modules.inspect, name: name})
       false
     end
   end
@@ -176,7 +176,7 @@ class R10K::Module::Base
     elsif (match = title.match(/\A(\w+)[-\/](\w+)\Z/))
       [match[1], match[2]]
     else
-      raise ArgumentError, _("Module name (%{title}) must match either 'modulename' or 'owner/modulename'") % {title: title}
+      raise ArgumentError, "Module name (%{title}) must match either 'modulename' or 'owner/modulename'" % {title: title}
     end
   end
 end

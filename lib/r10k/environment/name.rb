@@ -80,9 +80,9 @@ module R10K
         return original_name unless strip_component
 
         unless strip_component.is_a?(String)
-          raise _('Improper configuration value given for strip_component setting in %{src} source. ' \
+          raise 'Improper configuration value given for strip_component setting in %{src} source. ' \
                   'Value must be a string, a /regex/, false, or omitted. Got "%{val}" (%{type})' \
-                  % {src: @source, val: strip_component, type: strip_component.class})
+                  % {src: @source, val: strip_component, type: strip_component.class}
         end
 
         if %r{^/.*/$}.match(strip_component)

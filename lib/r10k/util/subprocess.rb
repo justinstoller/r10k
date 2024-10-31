@@ -67,15 +67,15 @@ module R10K
         subprocess = self.class.runner.new(@argv)
         subprocess.cwd = @cwd if @cwd
 
-        logmsg = _("Starting process: %{args}") % {args: @argv.inspect}
+        logmsg = "Starting process: %{args}" % {args: @argv.inspect}
         logmsg << "(cwd: #{@cwd})" if @cwd
         logger.debug2(logmsg)
 
         result = subprocess.run
-        logger.debug2(_("Finished process:\n%{result}") % {result: result.format})
+        logger.debug2("Finished process:\n%{result}" % {result: result.format})
 
         if @raise_on_fail && result.failed?
-          raise SubprocessError.new(_("Command exited with non-zero exit code"), :result => result)
+          raise SubprocessError.new("Command exited with non-zero exit code", :result => result)
         end
 
         result

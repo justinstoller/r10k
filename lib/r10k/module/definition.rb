@@ -25,7 +25,7 @@ class R10K::Module::Definition < R10K::Module::Base
   # syncing is a noop for module definitions
   # Returns false to inidicate the module was not updated
   def sync(args = {})
-    logger.debug1(_("Not updating module %{name}, assuming content unchanged") % {name: name})
+    logger.debug1("Not updating module %{name}, assuming content unchanged" % {name: name})
     false
   end
 

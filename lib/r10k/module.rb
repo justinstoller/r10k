@@ -42,7 +42,7 @@ module R10K::Module
     if implementation = @klasses.find { |klass| klass.implement?(name, args) }
       block.call(implementation)
     else
-      raise _("Module %{name} with args %{args} doesn't have an implementation. (Are you using the right arguments?)") % {name: name, args: args.inspect}
+      raise "Module %{name} with args %{args} doesn't have an implementation. (Are you using the right arguments?)" % {name: name, args: args.inspect}
     end
   end
 

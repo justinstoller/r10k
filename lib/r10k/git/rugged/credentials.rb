@@ -25,7 +25,7 @@ class R10K::Git::Rugged::Credentials
     # Break out of infinite HTTP auth retry loop introduced in libgit2/rugged 0.24.0, libssh
     # auth seems to already abort after ~50 attempts.
     if @called > 50
-      raise R10K::Git::GitError.new(_("Authentication failed for Git remote %{url}.") % {url: url.inspect} )
+      raise R10K::Git::GitError.new("Authentication failed for Git remote %{url}." % {url: url.inspect} )
     end
 
     if allowed_types.include?(:ssh_key)
@@ -49,16 +49,16 @@ class R10K::Git::Rugged::Credentials
 
     if per_repo_private_key
       private_key = per_repo_private_key
-      logger.debug2 _("Using per-repository private key %{key} for URL %{url}") % {key: private_key, url: url.inspect}
+      logger.debug2 "Using per-repository private key %{key} for URL %{url}" % {key: private_key, url: url.inspect}
     elsif global_private_key
       private_key = global_private_key
-      logger.debug2 _("URL %{url} has no per-repository private key using '%{key}'." ) % {key: private_key, url: url.inspect}
+      logger.debug2 "URL %{url} has no per-repository private key using '%{key}'."  % {key: private_key, url: url.inspect}
     else
-      raise R10K::Git::GitError.new(_("Git remote %{url} uses the SSH protocol but no private key was given") % {url: url.inspect}, :git_dir => @repository.path.to_s)
+      raise R10K::Git::GitError.new("Git remote %{url} uses the SSH protocol but no private key was given" % {url: url.inspect}, :git_dir => @repository.path.to_s)
     end
 
     if !File.readable?(private_key)
-      raise R10K::Git::GitError.new(_("Unable to use SSH key auth for %{url}: private key %{private_key} is missing or unreadable") % {url: url.inspect, private_key: private_key.inspect}, :git_dir => @repository.path.to_s)
+      raise R10K::Git::GitError.new("Unable to use SSH key auth for %{url}: private key %{private_key} is missing or unreadable" % {url: url.inspect, private_key: private_key.inspect}, :git_dir => @repository.path.to_s)
     end
 
     Rugged::Credentials::SshKey.new(:username => user, :privatekey => private_key)
@@ -99,16 +99,16 @@ class R10K::Git::Rugged::Credentials
   def extract_token(token_path, url)
     if token_path == '-'
       token = $stdin.read.strip
-      logger.debug2 _("Using OAuth token from stdin for URL %{url}") % { url: url }
+      logger.debug2 "Using OAuth token from stdin for URL %{url}" % { url: url }
     elsif File.readable?(token_path)
       token = File.read(token_path).strip
-      logger.debug2 _("Using OAuth token from %{token_path} for URL %{url}") % { token_path: token_path, url: url }
+      logger.debug2 "Using OAuth token from %{token_path} for URL %{url}" % { token_path: token_path, url: url }
     else
-      raise R10K::Git::GitError, _("%{path} is missing or unreadable, cannot load OAuth token") % { path: token_path }
+      raise R10K::Git::GitError, "%{path} is missing or unreadable, cannot load OAuth token" % { path: token_path }
     end
 
     unless valid_token?(token)
-      raise R10K::Git::GitError, _("Supplied OAuth token contains invalid characters.")
+      raise R10K::Git::GitError, "Supplied OAuth token contains invalid characters."
     end
 
     token
@@ -132,33 +132,33 @@ class R10K::Git::Rugged::Credentials
 
     if !username_from_url.nil? && !username_from_url.empty?
       user = username_from_url
-      logger.debug2 _("URL %{url} includes the username %{username}, using that user for authentication.") % {url: url.inspect, username: username_from_url}
+      logger.debug2 "URL %{url} includes the username %{username}, using that user for authentication." % {url: url.inspect, username: username_from_url}
     elsif git_user
       user = git_user
-      logger.debug2 _("URL %{url} did not specify a user, using %{user} from configuration") % {url: url.inspect, user: user.inspect}
+      logger.debug2 "URL %{url} did not specify a user, using %{user} from configuration" % {url: url.inspect, user: user.inspect}
     else
       user = Etc.getlogin
-      logger.debug2 _("URL %{url} did not specify a user, using current user %{user}") % {url: url.inspect, user: user.inspect}
+      logger.debug2 "URL %{url} did not specify a user, using current user %{user}" % {url: url.inspect, user: user.inspect}
     end
 
     user
   end
 
   def github_app_token(app_id, private_key, ttl)
-    raise R10K::Git::GitError, _('Github App id contains invalid characters.') unless app_id =~ /^\d+$/
-    raise R10K::Git::GitError, _('Github App token ttl contains invalid characters.') unless ttl =~ /^\d+$/
-    raise R10K::Git::GitError, _('Github App key is missing or unreadable') unless File.readable?(private_key)
+    raise R10K::Git::GitError, 'Github App id contains invalid characters.' unless app_id =~ /^\d+$/
+    raise R10K::Git::GitError, 'Github App token ttl contains invalid characters.' unless ttl =~ /^\d+$/
+    raise R10K::Git::GitError, 'Github App key is missing or unreadable' unless File.readable?(private_key)
 
     begin
       ssl_key = OpenSSL::PKey::RSA.new(File.read(private_key).strip)
       unless ssl_key.private?
-        raise R10K::Git::GitError, _('Github App key is not a valid SSL private key')
+        raise R10K::Git::GitError, 'Github App key is not a valid SSL private key'
       end
     rescue OpenSSL::PKey::RSAError
-      raise R10K::Git::GitError, _('Github App key is not a valid SSL key')
+      raise R10K::Git::GitError, 'Github App key is not a valid SSL key'
     end
 
-    logger.debug2 _("Using Github App id %{app_id} with SSL key from %{key_path}") % { key_path: private_key, app_id: app_id }
+    logger.debug2 "Using Github App id %{app_id} with SSL key from %{key_path}" % { key_path: private_key, app_id: app_id }
 
     jwt_issue_time = Time.now.to_i - 60
     jwt_exp_time = (jwt_issue_time + 60) + ttl.to_i
@@ -175,8 +175,8 @@ class R10K::Git::Rugged::Credentials
     end
 
     unless (get_response.class < Net::HTTPSuccess)
-      logger.debug2 _("Unexpected response code: #{get_response.code}\nResponse body: #{get_response.body}")
-      raise R10K::Git::GitError, _("Error using private key to get Github App access token from url")
+      logger.debug2 "Unexpected response code: #{get_response.code}\nResponse body: #{get_response.body}"
+      raise R10K::Git::GitError, "Error using private key to get Github App access token from url"
     end
 
     access_tokens_url = JSON.parse(get_response.body)[0]['access_tokens_url']
@@ -191,15 +191,15 @@ class R10K::Git::Rugged::Credentials
     end
 
     unless (post_response.class < Net::HTTPSuccess)
-      logger.debug2 _("Unexpected response code: #{post_response.code}\nResponse body: #{post_response.body}")
-      raise R10K::Git::GitError, _("Error using private key to generate access token from #{access_token_url}")
+      logger.debug2 "Unexpected response code: #{post_response.code}\nResponse body: #{post_response.body}"
+      raise R10K::Git::GitError, "Error using private key to generate access token from #{access_token_url}"
     end
 
     token = JSON.parse(post_response.body)['token']
 
-    raise R10K::Git::GitError, _("Github App token contains invalid characters.") unless valid_token?(token)
+    raise R10K::Git::GitError, "Github App token contains invalid characters." unless valid_token?(token)
 
-    logger.debug2 _("Github App token generated, expires at: %{expire}") % {expire: JSON.parse(post_response.body)['expires_at']}
+    logger.debug2 "Github App token generated, expires at: %{expire}" % {expire: JSON.parse(post_response.body)['expires_at']}
     token
   end
 end

@@ -42,15 +42,15 @@ module R10K
 
         # If both default files are present, issue a warning.
         if (File.file? DEFAULT_LOCATION) && (File.file? OLD_DEFAULT_LOCATION)
-          logger.warn _("Both %{default_path} and %{old_default_path} configuration files exist.") % {default_path: DEFAULT_LOCATION, old_default_path: OLD_DEFAULT_LOCATION}
-          logger.warn _("%{default_path} will be used.") % {default_path: DEFAULT_LOCATION}
+          logger.warn "Both %{default_path} and %{old_default_path} configuration files exist." % {default_path: DEFAULT_LOCATION, old_default_path: OLD_DEFAULT_LOCATION}
+          logger.warn "%{default_path} will be used." % {default_path: DEFAULT_LOCATION}
         end
 
         path = @loadpath.find {|filename| File.file? filename}
 
         if path == OLD_DEFAULT_LOCATION
-          logger.warn _("The r10k configuration file at %{old_default_path} is deprecated.") % {old_default_path: OLD_DEFAULT_LOCATION}
-          logger.warn _("Please move your r10k configuration to %{default_path}.") % {default_path: DEFAULT_LOCATION}
+          logger.warn "The r10k configuration file at %{old_default_path} is deprecated." % {old_default_path: OLD_DEFAULT_LOCATION}
+          logger.warn "Please move your r10k configuration to %{default_path}." % {default_path: DEFAULT_LOCATION}
         end
 
         path
@@ -60,17 +60,17 @@ module R10K
         path = search(override)
 
         if path.nil?
-          raise ConfigError, _("No configuration file given, no config file found in current directory, and no global config present")
+          raise ConfigError, "No configuration file given, no config file found in current directory, and no global config present"
         end
 
         begin
           contents = ::YAML.load_file(path)
         rescue => e
-          raise ConfigError, _("Couldn't load config file: %{error_msg}") % {error_msg: e.message}
+          raise ConfigError, "Couldn't load config file: %{error_msg}" % {error_msg: e.message}
         end
 
         if !contents
-          raise ConfigError, _("File exists at #{path} but doesn't contain any YAML") % {path: path}
+          raise ConfigError, "File exists at #{path} but doesn't contain any YAML" % {path: path}
         end
         R10K::Util::SymbolizeKeys.symbolize_keys!(contents, true)
         contents

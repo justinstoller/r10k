@@ -25,7 +25,7 @@ class R10K::Git::Rugged::WorkingRepository < R10K::Git::Rugged::BaseRepository
   #
   # @return [void]
   def clone(remote, opts = {})
-    logger.debug1 { _("Cloning '%{remote}' into %{path}") % {remote: remote, path: @path } }
+    logger.debug1 { "Cloning '%{remote}' into %{path}" % {remote: remote, path: @path } }
 
     proxy = R10K::Git.get_proxy_for_remote(remote)
     # libgit2/rugged doesn't support cloning a repository and providing an
@@ -64,7 +64,7 @@ class R10K::Git::Rugged::WorkingRepository < R10K::Git::Rugged::BaseRepository
     sha = resolve(ref)
 
     if sha
-      logger.debug2 { _("Checking out ref '%{ref}' (resolved to SHA '%{sha}') in repository %{path}") % {ref: ref, sha: sha, path: @path} }
+      logger.debug2 { "Checking out ref '%{ref}' (resolved to SHA '%{sha}') in repository %{path}" % {ref: ref, sha: sha, path: @path} }
     else
       raise R10K::Git::GitError.new("Unable to check out unresolvable ref '#{ref}'", git_dir: git_dir)
     end
@@ -84,7 +84,7 @@ class R10K::Git::Rugged::WorkingRepository < R10K::Git::Rugged::BaseRepository
   end
 
   def fetch(remote_name = 'origin')
-    logger.debug1 { _("Fetching remote '%{remote}' at %{path}") % {remote: remote_name, path: @path} }
+    logger.debug1 { "Fetching remote '%{remote}' at %{path}" % {remote: remote_name, path: @path} }
 
     remote = remotes[remote_name]
     proxy = R10K::Git.get_proxy_for_remote(remote)
@@ -128,7 +128,7 @@ class R10K::Git::Rugged::WorkingRepository < R10K::Git::Rugged::BaseRepository
       end
 
       diff.each do |p|
-        logger.debug(_("Found local modifications in %{file_path}" % {file_path: File.join(@path, p.delta.old_file[:path])}))
+        logger.debug("Found local modifications in %{file_path}" % {file_path: File.join(@path, p.delta.old_file[:path])})
         logger.debug1(p.to_s)
       end
 

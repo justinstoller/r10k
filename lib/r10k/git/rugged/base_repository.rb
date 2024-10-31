@@ -21,7 +21,7 @@ class R10K::Git::Rugged::BaseRepository
       object.oid
     end
   rescue ::Rugged::ReferenceError, ::Rugged::OdbError => e
-    logger.debug2(_("Unable to resolve %{pattern}: %{e} ") % {pattern: pattern, e: e })
+    logger.debug2("Unable to resolve %{pattern}: %{e} " % {pattern: pattern, e: e })
     nil
   end
 
@@ -66,7 +66,7 @@ class R10K::Git::Rugged::BaseRepository
   # @param [String] An optional remote name for the git repository
   def update_remote(remote, remote_name='origin')
     if @_rugged_repo
-      logger.debug2(_("Remote URL is different from cache, updating %{orig} to %{update}") % {orig: remotes[remote_name], update: remote})
+      logger.debug2("Remote URL is different from cache, updating %{orig} to %{update}" % {orig: remotes[remote_name], update: remote})
       @_rugged_repo.remotes.set_url(remote_name, remote)
     end
   end

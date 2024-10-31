@@ -30,7 +30,7 @@ module R10K
 
     # Returns a Queue of the names of modules actually updated
     def self.sync_queue(mods_queue, pool_size, logger)
-      logger.debug _("Updating modules with %{pool_size} threads") % {pool_size: pool_size}
+      logger.debug "Updating modules with %{pool_size} threads" % {pool_size: pool_size}
       updated_modules = Queue.new
       thread_pool = pool_size.times.map { sync_thread(mods_queue, logger, updated_modules) }
       thread_exception = nil
@@ -43,7 +43,7 @@ module R10K
         # Return the list of all modules that were actually updated
         updated_modules
       rescue => e
-        logger.error _("Error during concurrent deploy of a module: %{message}") % {message: e.message}
+        logger.error "Error during concurrent deploy of a module: %{message}" % {message: e.message}
         mods_queue.clear
         thread_exception ||= e
         retry
@@ -83,13 +83,13 @@ module R10K
                 updated = mod.sync
                 updated_modules << mod.name if updated
               rescue Exception => e
-                logger.error _("Module %{mod_name} failed to synchronize due to %{message}") % {mod_name: mod.name, message: e.message}
+                logger.error "Module %{mod_name} failed to synchronize due to %{message}" % {mod_name: mod.name, message: e.message}
                 raise e
               end
             end
           end
         rescue ThreadError => e
-          logger.debug _("Module thread %{id} exiting: %{message}") % {message: e.message, id: Thread.current.object_id}
+          logger.debug "Module thread %{id} exiting: %{message}" % {message: e.message, id: Thread.current.object_id}
           Thread.exit
         rescue => e
           Thread.main.raise(e)

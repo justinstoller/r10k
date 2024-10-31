@@ -72,10 +72,10 @@ class R10K::Source::Git < R10K::Source::Base
   #
   # @return [void]
   def preload!
-    logger.debug _("Fetching '%{remote}' to determine current branches.") % {remote: @remote}
+    logger.debug "Fetching '%{remote}' to determine current branches." % {remote: @remote}
     @cache.sync
   rescue => e
-    raise R10K::Error.wrap(e, _("Unable to determine current branches for Git source '%{name}' (%{basedir})") % {name: @name, basedir: @basedir})
+    raise R10K::Error.wrap(e, "Unable to determine current branches for Git source '%{name}' (%{basedir})" % {name: @name, basedir: @basedir})
   end
   alias fetch_remote preload!
 
@@ -110,7 +110,7 @@ class R10K::Source::Git < R10K::Source::Base
                                             puppetfile_name: puppetfile_name,
                                             overrides: @options[:overrides]})
       elsif en.correct?
-       logger.warn _("Environment %{env_name} contained non-word characters, correcting name to %{corrected_env_name}") % {env_name: en.name.inspect, corrected_env_name: en.dirname}
+       logger.warn "Environment %{env_name} contained non-word characters, correcting name to %{corrected_env_name}" % {env_name: en.name.inspect, corrected_env_name: en.dirname}
         envs << R10K::Environment::Git.new(en.name,
                                            @basedir,
                                            en.dirname,
@@ -119,7 +119,7 @@ class R10K::Source::Git < R10K::Source::Base
                                             puppetfile_name: puppetfile_name,
                                             overrides: @options[:overrides]})
       elsif en.validate?
-       logger.error _("Environment %{env_name} contained non-word characters, ignoring it.") % {env_name: en.name.inspect}
+       logger.error "Environment %{env_name} contained non-word characters, ignoring it." % {env_name: en.name.inspect}
       end
     end
 
@@ -138,7 +138,7 @@ class R10K::Source::Git < R10K::Source::Base
     branches = branches.reject do |branch|
       result = filter.match(branch)
       if result
-        logger.warn _("Branch %{branch} filtered out by ignore_branch_prefixes %{ibp}") % {branch: branch, ibp: @ignore_branch_prefixes}
+        logger.warn "Branch %{branch} filtered out by ignore_branch_prefixes %{ibp}" % {branch: branch, ibp: @ignore_branch_prefixes}
       end
       result
     end
@@ -149,7 +149,7 @@ class R10K::Source::Git < R10K::Source::Base
     branches.select do |branch|
       result = system({'GIT_DIR' => @cache.git_dir.to_s, 'R10K_BRANCH' => branch, 'R10K_NAME' => @name.to_s}, command)
       unless result
-        logger.warn _("Branch `%{name}:%{branch}` filtered out by filter_command %{cmd}") % {name: @name, branch: branch, cmd: command}
+        logger.warn "Branch `%{name}:%{branch}` filtered out by filter_command %{cmd}" % {name: @name, branch: branch, cmd: command}
       end
       result
     end

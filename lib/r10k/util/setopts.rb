@@ -57,14 +57,14 @@ module R10K
             if processed_vars.include?(var)
               # This should be a raise, but that would be a behavior change and
               # should happen on a SemVer boundry.
-              logger.warn _("%{class_name} parameters '%{a}' and '%{b}' conflict. Specify one or the other, but not both" \
-                            % {class_name: self.class.name, a: processed_vars[var], b: key})
+              logger.warn "%{class_name} parameters '%{a}' and '%{b}' conflict. Specify one or the other, but not both" \
+                            % {class_name: self.class.name, a: processed_vars[var], b: key}
             end
 
             instance_variable_set(var, value)
             processed_vars[var] = key
           else
-            err_str = _("%{class_name} cannot handle option '%{key}'") % {class_name: self.class.name, key: key}
+            err_str = "%{class_name} cannot handle option '%{key}'" % {class_name: self.class.name, key: key}
             if raise_on_unhandled
               raise ArgumentError, err_str
             else

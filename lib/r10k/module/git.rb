@@ -80,7 +80,7 @@ class R10K::Module::Git < R10K::Module::Base
       if @environment && @environment.respond_to?(:ref)
         @desired_ref = @environment.ref
       else
-        logger.warn _("Cannot track control repo branch for content '%{name}' when not part of a git-backed environment, will use default if available." % {name: name})
+        logger.warn "Cannot track control repo branch for content '%{name}' when not part of a git-backed environment, will use default if available." % {name: name}
       end
     end
 
@@ -164,7 +164,7 @@ class R10K::Module::Git < R10K::Module::Base
         msg << "in your r10k config."
       end
 
-      raise ArgumentError, _(msg.join(' ')) % vars
+      raise ArgumentError, msg.join(' ') % vars
     end
   end
 end

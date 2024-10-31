@@ -164,7 +164,7 @@ module R10K
     end
 
     def cache_checksum
-      raise R10K::Error, _("Cache not present at %{path}") % {path: cache_path} unless File.exist?(cache_path)
+      raise R10K::Error, "Cache not present at %{path}" % {path: cache_path} unless File.exist?(cache_path)
       file_digest(cache_path)
     end
 

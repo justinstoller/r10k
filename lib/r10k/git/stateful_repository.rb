@@ -42,7 +42,7 @@ class R10K::Git::StatefulRepository
     sha = @cache.resolve(ref)
 
     if sha.nil?
-      raise R10K::Git::UnresolvableRefError.new(_("Unable to sync repo to unresolvable ref '%{ref}'") % {ref: ref}, :git_dir => @repo.git_dir)
+      raise R10K::Git::UnresolvableRefError.new("Unable to sync repo to unresolvable ref '%{ref}'" % {ref: ref}, :git_dir => @repo.git_dir)
     end
 
     workdir_status = status(ref, exclude_spec)
@@ -50,26 +50,26 @@ class R10K::Git::StatefulRepository
     updated = true
     case workdir_status
     when :absent
-      logger.debug(_("Cloning %{repo_path} and checking out %{ref}") % {repo_path: @repo.path, ref: ref })
+      logger.debug("Cloning %{repo_path} and checking out %{ref}" % {repo_path: @repo.path, ref: ref })
       @repo.clone(@remote, {:ref => sha})
     when :mismatched
-      logger.debug(_("Replacing %{repo_path} and checking out %{ref}") % {repo_path: @repo.path, ref: ref })
+      logger.debug("Replacing %{repo_path} and checking out %{ref}" % {repo_path: @repo.path, ref: ref })
       @repo.path.rmtree
       @repo.clone(@remote, {:ref => sha})
     when :outdated
-      logger.debug(_("Updating %{repo_path} to %{ref}") % {repo_path: @repo.path, ref: ref })
+      logger.debug("Updating %{repo_path} to %{ref}" % {repo_path: @repo.path, ref: ref })
       @repo.checkout(sha, {:force => force})
     when :dirty
       if force
-        logger.warn(_("Overwriting local modifications to %{repo_path}") % {repo_path: @repo.path})
-        logger.debug(_("Updating %{repo_path} to %{ref}") % {repo_path: @repo.path, ref: ref })
+        logger.warn("Overwriting local modifications to %{repo_path}" % {repo_path: @repo.path})
+        logger.debug("Updating %{repo_path} to %{ref}" % {repo_path: @repo.path, ref: ref })
         @repo.checkout(sha, {:force => force})
       else
-        logger.warn(_("Skipping %{repo_path} due to local modifications") % {repo_path: @repo.path})
+        logger.warn("Skipping %{repo_path} due to local modifications" % {repo_path: @repo.path})
         updated = false
       end
     else
-      logger.debug(_("%{repo_path} is already at Git ref %{ref}") % {repo_path: @repo.path, ref: ref })
+      logger.debug("%{repo_path} is already at Git ref %{ref}" % {repo_path: @repo.path, ref: ref })
       updated = false
     end
     updated

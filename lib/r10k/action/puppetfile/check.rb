@@ -22,7 +22,7 @@ module R10K
                 mod.validate_ref_defined
               end
             end
-            $stderr.puts _("Syntax OK")
+            $stderr.puts "Syntax OK"
             true
           rescue => e
             $stderr.puts R10K::Errors::Formatting.format_exception(e, @trace)

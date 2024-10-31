@@ -96,7 +96,7 @@ module R10K
           undeployable = undeployable_environment_names(deployment.environments, @settings.dig(:overrides, :environments, :requested_environments))
           if !undeployable.empty?
             @visit_ok = false
-            logger.error _("Environment(s) \'%{environments}\' cannot be found in any source and will not be deployed.") % {environments: undeployable.join(", ")}
+            logger.error "Environment(s) \'%{environments}\' cannot be found in any source and will not be deployed." % {environments: undeployable.join(", ")}
           end
 
           yield
@@ -116,7 +116,7 @@ module R10K
               envs.reject! { |e| !requested_envs.include?(e) } if requested_envs.any?
               postcmd = postcmd.map { |e| e.gsub('$modifiedenvs', envs.join(' ')) }
             end
-            logger.debug _("Executing postrun command.")
+            logger.debug "Executing postrun command."
             subproc = R10K::Util::Subprocess.new(postcmd)
             subproc.logger = logger
             subproc.execute
@@ -130,7 +130,7 @@ module R10K
         def visit_environment(environment)
           requested_envs = @settings.dig(:overrides, :environments, :requested_environments)
           if !(requested_envs.empty? || requested_envs.any? { |name| environment.dirname == name })
-            logger.debug1(_("Environment %{env_dir} does not match environment name filter, skipping") % {env_dir: environment.dirname})
+            logger.debug1("Environment %{env_dir} does not match environment name filter, skipping" % {env_dir: environment.dirname})
             return
           end
 
@@ -138,14 +138,14 @@ module R10K
           @environment_ok = true
 
           status = environment.status
-          logger.info _("Deploying environment %{env_path}") % {env_path: environment.path}
+          logger.info "Deploying environment %{env_path}" % {env_path: environment.path}
 
           environment.sync
-          logger.info _("Environment %{env_dir} is now at %{env_signature}") % {env_dir: environment.dirname, env_signature: environment.signature}
+          logger.info "Environment %{env_dir} is now at %{env_signature}" % {env_dir: environment.dirname, env_signature: environment.signature}
 
           if status == :absent || @settings.dig(:overrides, :modules, :deploy_modules)
             if status == :absent
-              logger.debug(_("Environment %{env_dir} is new, updating all modules") % {env_dir: environment.dirname})
+              logger.debug("Environment %{env_dir} is new, updating all modules" % {env_dir: environment.dirname})
             end
 
             previous_ok = @visit_ok

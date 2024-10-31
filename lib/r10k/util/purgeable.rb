@@ -88,9 +88,9 @@ module R10K
           path = path.to_s
 
           if exclusion_match = exclusion_globs.find { |exclusion| matches?(exclusion, path) }
-            logger.debug2 _("Not purging %{path} due to internal exclusion match: %{exclusion_match}") % {path: path, exclusion_match: exclusion_match}
+            logger.debug2 "Not purging %{path} due to internal exclusion match: %{exclusion_match}" % {path: path, exclusion_match: exclusion_match}
           elsif allowlist_match = allowed_globs.find { |allowed| matches?(allowed, path) }
-            logger.debug _("Not purging %{path} due to whitelist match: %{allowlist_match}") % {path: path, allowlist_match: allowlist_match}
+            logger.debug "Not purging %{path} due to whitelist match: %{allowlist_match}" % {path: path, allowlist_match: allowlist_match}
           else
             desired_match = desireds_not_to_recurse_into.grep(path).first
           end
@@ -134,17 +134,17 @@ module R10K
         stale = stale_contents(recurse, exclusions, whitelist)
 
         if stale.empty?
-          logger.debug1 _("No unmanaged contents in %{managed_dirs}, nothing to purge") % {managed_dirs: managed_directories.join(', ')}
+          logger.debug1 "No unmanaged contents in %{managed_dirs}, nothing to purge" % {managed_dirs: managed_directories.join(', ')}
         else
           stale.each do |fpath|
             begin
               FileUtils.rm_r(fpath, :secure => true)
-              logger.info _("Removing unmanaged path %{path}") % {path: fpath}
+              logger.info "Removing unmanaged path %{path}" % {path: fpath}
             rescue Errno::ENOENT
               # Don't log on ENOENT since we may encounter that from recursively deleting
               # this item's parent earlier in the purge.
             rescue
-              logger.debug1 _("Unable to remove unmanaged path: %{path}") % {path: fpath}
+              logger.debug1 "Unable to remove unmanaged path: %{path}" % {path: fpath}
             end
           end
         end

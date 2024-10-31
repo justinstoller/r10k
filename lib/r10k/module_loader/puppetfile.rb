@@ -65,8 +65,8 @@ module R10K
       end
 
       def load!
-        logger.info _("Using Puppetfile '%{puppetfile}'") % {puppetfile: @puppetfile_path}
-        logger.debug _("Using moduledir '%{moduledir}'") % {moduledir: @moduledir}
+        logger.info "Using Puppetfile '%{puppetfile}'" % {puppetfile: @puppetfile_path}
+        logger.debug "Using moduledir '%{moduledir}'" % {moduledir: @moduledir}
 
         dsl = R10K::ModuleLoader::Puppetfile::DSL.new(self)
         dsl.instance_eval(puppetfile_content(@puppetfile_path), @puppetfile_path)
@@ -88,7 +88,7 @@ module R10K
         }
 
       rescue SyntaxError, LoadError, ArgumentError, NameError => e
-        raise R10K::Error.wrap(e, _("Failed to evaluate %{path}") % {path: @puppetfile_path})
+        raise R10K::Error.wrap(e, "Failed to evaluate %{path}" % {path: @puppetfile_path})
       end
 
       def load_metadata
@@ -105,7 +105,7 @@ module R10K
         empty_load_output.merge(modules: @existing_module_metadata)
 
       rescue ScriptError, StandardError => e
-        logger.warn _("Unable to preload Puppetfile because of %{msg}" % { msg: e.message })
+        logger.warn "Unable to preload Puppetfile because of %{msg}" % { msg: e.message }
 
         @existing_module_metadata = []
         @existing_module_versions_by_name = {}
@@ -126,10 +126,10 @@ module R10K
       # @param [String] forge
       def set_forge(forge)
         if @allow_puppetfile_forge
-          logger.debug _("Using Forge from Puppetfile: %{forge}") % { forge: forge }
+          logger.debug "Using Forge from Puppetfile: %{forge}" % { forge: forge }
           PuppetForge.host = forge
         else
-          logger.debug _("Ignoring Forge declaration in Puppetfile, using value from settings: %{forge}.") % { forge: PuppetForge.host }
+          logger.debug "Ignoring Forge declaration in Puppetfile, using value from settings: %{forge}." % { forge: PuppetForge.host }
         end
       end
 
@@ -193,7 +193,7 @@ module R10K
         if File.readable?(puppetfile_path)
           block.call
         else
-          logger.debug _("Puppetfile %{path} missing or unreadable") % {path: puppetfile_path.inspect}
+          logger.debug "Puppetfile %{path} missing or unreadable" % {path: puppetfile_path.inspect}
 
           empty_load_output
         end
@@ -235,9 +235,9 @@ module R10K
                 .select { |_, mods| mods.size > 1 }
                 .map(&:first)
         unless dupes.empty?
-          msg = _('Puppetfiles cannot contain duplicate module names.')
+          msg = 'Puppetfiles cannot contain duplicate module names.'
           msg += ' '
-          msg += _("Remove the duplicates of the following modules: %{dupes}" % { dupes: dupes.join(' ') })
+          msg += "Remove the duplicates of the following modules: %{dupes}" % { dupes: dupes.join(' ') }
           raise R10K::Error.new(msg)
         end
       end

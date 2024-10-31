@@ -112,7 +112,7 @@ class R10K::Source::SVN < R10K::Source::Base
     branches = branches.reject do |branch|
       result = filter.match(branch)
       if result
-        logger.warn _("Branch %{branch} filtered out by ignore_branch_prefixes %{ibp}") % {branch: branch, ibp: @ignore_branch_prefixes}
+        logger.warn "Branch %{branch} filtered out by ignore_branch_prefixes %{ibp}" % {branch: branch, ibp: @ignore_branch_prefixes}
       end
       result
     end

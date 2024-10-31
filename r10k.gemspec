@@ -30,8 +30,6 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'puppet_forge', '~> 6.0'
 
-  s.add_dependency 'gettext-setup', '>=0.24', '<2.0'
-
   s.add_dependency 'jwt', '>= 2.2.3', '< 3'
   s.add_dependency 'minitar', '~> 1.0', '>= 1.0.2'
 

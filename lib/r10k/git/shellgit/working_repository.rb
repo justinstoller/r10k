@@ -98,7 +98,7 @@ class R10K::Git::ShellGit::WorkingRepository < R10K::Git::ShellGit::BaseReposito
       dirty_files.delete_if { |f| f.start_with?('spec/') } if exclude_spec
 
       dirty_files.each do |file|
-        logger.debug(_("Found local modifications in %{file_path}" % {file_path: File.join(@path, file)}))
+        logger.debug("Found local modifications in %{file_path}" % {file_path: File.join(@path, file)})
 
         # Do this in a block so that the extra subprocess only gets invoked when needed.
         logger.debug1 { git(['diff-index', '-p', 'HEAD', '--', file], :path => @path.to_s, :raise_on_fail => false).stdout }

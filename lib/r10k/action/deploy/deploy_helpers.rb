@@ -13,7 +13,7 @@ module R10K
         # @raise [SystemExit] If no config file was loaded
         def expect_config!
           if @config.nil?
-            logger.fatal(_("No configuration file given, no config file found in current directory, and no global config present"))
+            logger.fatal("No configuration file given, no config file found in current directory, and no global config present")
             exit(8)
           end
         end
@@ -27,8 +27,8 @@ module R10K
         def check_write_lock!(config)
           write_lock = config.fetch(:deploy, {})[:write_lock]
           if write_lock
-            logger.fatal(_("Making changes to deployed environments has been administratively disabled."))
-            logger.fatal(_("Reason: %{write_lock}") % {write_lock: write_lock})
+            logger.fatal("Making changes to deployed environments has been administratively disabled.")
+            logger.fatal("Reason: %{write_lock}" % {write_lock: write_lock})
             exit(16)
           end
         end

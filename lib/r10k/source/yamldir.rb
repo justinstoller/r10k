@@ -5,11 +5,11 @@ class R10K::Source::Yamldir < R10K::Source::Hash
     config = options[:config] || '/etc/puppetlabs/r10k/environments.d'
 
     unless File.directory?(config)
-      raise R10K::Deployment::Config::ConfigError, _("Error opening %{dir}: config must be a directory") % {dir: config}
+      raise R10K::Deployment::Config::ConfigError, "Error opening %{dir}: config must be a directory" % {dir: config}
     end
 
     unless File.readable?(config)
-      raise R10K::Deployment::Config::ConfigError, _("Error opening %{dir}: permission denied") % {dir: config}
+      raise R10K::Deployment::Config::ConfigError, "Error opening %{dir}: permission denied" % {dir: config}
     end
 
     environment_data = Dir.glob(File.join(config, '*.yaml')).reduce({}) do |memo,path|
@@ -17,7 +17,7 @@ class R10K::Source::Yamldir < R10K::Source::Hash
       begin
         contents = ::YAML.load_file(path)
       rescue => e
-        raise R10K::Deployment::Config::ConfigError, _("Error loading %{path}: %{err}") % {path: path, err: e.message}
+        raise R10K::Deployment::Config::ConfigError, "Error loading %{path}: %{err}" % {path: path, err: e.message}
       end
       memo.merge({name => contents })
     end

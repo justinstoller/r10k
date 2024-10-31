@@ -79,7 +79,7 @@ module R10K
           if (postcmd = @settings[:postrun])
             if @modified_envs.any?
               envs_to_run = @modified_envs.join(' ')
-              logger.debug _("Running postrun command for environments: %{envs_to_run}.") % { envs_to_run: envs_to_run }
+              logger.debug "Running postrun command for environments: %{envs_to_run}." % { envs_to_run: envs_to_run }
 
               if postcmd.grep('$modifiedenvs').any?
                 postcmd = postcmd.map { |e| e.gsub('$modifiedenvs', envs_to_run) }
@@ -89,7 +89,7 @@ module R10K
               subproc.logger = logger
               subproc.execute
             else
-              logger.debug _("No environments were modified, not executing postrun command.")
+              logger.debug "No environments were modified, not executing postrun command."
             end
           end
         end
@@ -101,9 +101,9 @@ module R10K
         def visit_environment(environment)
           requested_envs = @settings.dig(:overrides, :environments, :requested_environments)
           if !requested_envs.empty? && !requested_envs.include?(environment.dirname)
-            logger.debug1(_("Only updating modules in environment(s) %{opt_env} skipping environment %{env_path}") % {opt_env: requested_envs.inspect, env_path: environment.path})
+            logger.debug1("Only updating modules in environment(s) %{opt_env} skipping environment %{env_path}" % {opt_env: requested_envs.inspect, env_path: environment.path})
           else
-            logger.debug1(_("Updating modules %{modules} in environment %{env_path}") % {modules: @settings.dig(:overrides, :modules, :requested_modules).inspect, env_path: environment.path})
+            logger.debug1("Updating modules %{modules} in environment %{env_path}" % {modules: @settings.dig(:overrides, :modules, :requested_modules).inspect, env_path: environment.path})
 
             updated_modules = environment.deploy
 
