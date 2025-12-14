@@ -24,14 +24,10 @@ class R10K::Git::ShellGit::WorkingRepository < R10K::Git::ShellGit::BaseReposito
   # @param opts [Hash]
   #
   # @options opts [String] :ref The git ref to check out on clone
-  # @options opts [String] :reference A Git repository to use as an alternate object database
   #
   # @return [void]
   def clone(remote, opts = {})
     argv = ['clone', remote, @path.to_s]
-    if opts[:reference]
-      argv += ['--reference', opts[:reference]]
-    end
 
     proxy = R10K::Git.get_proxy_for_remote(remote)
 
@@ -78,7 +74,7 @@ class R10K::Git::ShellGit::WorkingRepository < R10K::Git::ShellGit::BaseReposito
   end
 
   def alternates
-    R10K::Git::Alternates.new(git_dir)
+    []
   end
 
   # @return [String] The origin remote URL

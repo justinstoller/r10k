@@ -10,5 +10,5 @@ describe R10K::Git::ShellGit::ThinRepository do
 
   subject { described_class.new(basedir, dirname, cacherepo) }
 
-  it_behaves_like "a git thin repository"
+  it_behaves_like "a repo pointing to a cache upstream"
 end

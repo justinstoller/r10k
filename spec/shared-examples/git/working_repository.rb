@@ -49,15 +49,6 @@ RSpec.shared_examples "a git working repository" do
       end
     end
 
-    describe "with a reference repository" do
-      it "adds the reference repository to the alternates directory" do
-        subject.clone(remote, {:reference => remote})
-        alternates = subject.alternates.to_a
-        expect(alternates.size).to eq 1
-        expect(alternates[0]).to match_realpath File.join(remote, 'objects')
-      end
-    end
-
     context "without a proxy" do
       before(:each) do
         allow(R10K::Git).to receive(:get_proxy_for_remote).with(remote).and_return(nil)
@@ -207,3 +198,17 @@ RSpec.shared_examples "a git working repository" do
     end
   end
 end
+
+RSpec.shared_examples "a working repo with alternates" do
+  describe "cloning" do
+    describe "with a reference repository" do
+      it "adds the reference repository to the alternates directory" do
+        subject.clone(remote, {:reference => remote})
+        alternates = subject.alternates.to_a
+        expect(alternates.size).to eq 1
+        expect(alternates[0]).to match_realpath File.join(remote, 'objects')
+      end
+    end
+  end
+end
+

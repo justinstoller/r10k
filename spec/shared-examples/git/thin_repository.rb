@@ -1,5 +1,17 @@
 RSpec.shared_examples "a git thin repository" do
   describe "cloning" do
+    it "adds the cache repo to the alternates file" do
+      subject.clone(remote)
+      objectpath = cacherepo.git_dir + 'objects'
+      alternates = subject.alternates.to_a
+      expect(alternates.size).to eq 1
+      expect(alternates[0]).to match_realpath objectpath
+    end
+  end
+end
+
+RSpec.shared_examples "a repo pointing to a cache upstream" do
+  describe "cloning" do
     it "creates a working copy of the repo" do
       subject.clone(remote)
       expect(subject.exist?).to be_truthy
@@ -13,14 +25,6 @@ RSpec.shared_examples "a git thin repository" do
     it "sets the remote cache url to the path to the cache repo" do
       subject.clone(remote)
       expect(subject.cache).to eq cacherepo.git_dir.to_s
-    end
-
-    it "adds the cache repo to the alternates file" do
-      subject.clone(remote)
-      objectpath = cacherepo.git_dir + 'objects'
-      alternates = subject.alternates.to_a
-      expect(alternates.size).to eq 1
-      expect(alternates[0]).to match_realpath objectpath
     end
   end
 end

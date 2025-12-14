@@ -11,4 +11,5 @@ describe R10K::Git::Rugged::ThinRepository, :if => R10K::Features.available?(:ru
   subject { described_class.new(basedir, dirname, cacherepo) }
 
   it_behaves_like "a git thin repository"
+  it_behaves_like "a repo pointing to a cache upstream"
 end

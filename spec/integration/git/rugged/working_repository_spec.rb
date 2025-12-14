@@ -10,6 +10,7 @@ describe R10K::Git::Rugged::WorkingRepository, :if => R10K::Features.available?(
 
   it_behaves_like 'a git repository'
   it_behaves_like 'a git working repository'
+  it_behaves_like 'a working repo with alternates'
 
   describe "checking out an unresolvable ref" do
     it "raises an error indicating that the ref was unresolvable" do
