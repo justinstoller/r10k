@@ -25,13 +25,24 @@ class R10K::Git::ShellGit::ThinRepository < R10K::Git::ShellGit::WorkingReposito
     # todo check if opts[:reference] is set
     @cache_repo.sync
 
-    super(remote, opts.merge(:reference => @cache_repo.git_dir.to_s))
-    setup_cache_remote
+    super(remote, opts.merge(:initial_checkout => true))
+    fetch
   end
 
   # Fetch refs from the backing bare Git repository.
   def fetch(remote = 'cache')
+    if !cache.strip.empty?
+      git ['remote', 'rm', 'cache'], :path => @path.to_s
+    end
+    setup_cache_remote
     git ['fetch', remote, '--prune'], :path => @path.to_s
+  end
+
+  def checkout(ref, opts = {})
+    unless opts[:initial_checkout]
+      fetch
+    end
+    super(ref, opts)
   end
 
   # @return [String] The origin remote URL
@@ -51,7 +62,6 @@ class R10K::Git::ShellGit::ThinRepository < R10K::Git::ShellGit::WorkingReposito
 
   def setup_cache_remote
     git ["remote", "add", "cache", @cache_repo.git_dir.to_s], :path => @path.to_s
-    fetch
   end
 
   def git(cmd, opts = {})

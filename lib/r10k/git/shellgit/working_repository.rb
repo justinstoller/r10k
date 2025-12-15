@@ -36,7 +36,7 @@ class R10K::Git::ShellGit::WorkingRepository < R10K::Git::ShellGit::BaseReposito
     end
 
     if opts[:ref]
-      checkout(opts[:ref])
+      checkout(opts[:ref], opts)
     end
   end
 
